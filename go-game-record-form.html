@@ -28,7 +28,7 @@
         height: auto;
       }
       .header {
-        width: 90%;
+        width: 100%;
       }
       .header h1 {
         text-align: center;
@@ -38,11 +38,18 @@
       }
       .header table tr {
         display: flex;
+        margin-bottom: 0.5em;
       }
       .header table tr td {
-        flex: 1;
+        flex: 2;
         display: flex;
-        margin-bottom: 0.5em;
+      }
+      .header table tr td:first-of-type {
+        flex: 3;
+      }
+      .header table tr td label {
+        margin-left: 0.5em;
+        margin-right: 0.5em;
       }
       .header table tr td label::after {
         content: ":";
@@ -52,14 +59,14 @@
         background: transparent;
         border: none;
         border-bottom: 1px solid black;
-        margin-left: 1em;
-        margin-right: 1em;
+        margin-left: 0.5em;
+        margin-right: 0.5em;
       }
       .footer {
         text-align: center;
         border: 1px solid black;
-        height: 20%;
-        width: 90%;
+        height: 10%;
+        width: calc(100% - 1em);
       }
     </style>
   </head>
