@@ -4,14 +4,10 @@
 
 This is a simple form for recording go games.
 
-## Download the form
+## [👉 Download PDF 👈](https://github.com/busser/go-game-record-form/raw/main/go-game-record-form.pdf)
 
-This repository includes a PDF of the form. You can download it here:
-https://github.com/busser/go-game-record-form/raw/main/go-game-record-form.pdf.
-
-## Generating a PDF from the source HTML
-
-You can generate a PDF by printing the HTML to a PDF. Here's how I do it:
+You can generate the PDF by printing the HTML with a web browser.
+Here's how I do it:
 
 ```
 /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome \
@@ -22,6 +18,5 @@ You can generate a PDF by printing the HTML to a PDF. Here's how I do it:
   ./go-game-record-form.html
 ```
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
+for details.
