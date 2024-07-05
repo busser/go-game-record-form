@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cutive&display=swap"
+      rel="stylesheet"
+    />
+    <title>Go game record</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+        height: 100vh;
+        justify-content: space-around;
+        font-family: "Cutive";
+      }
+      svg {
+        width: 100%;
+        height: auto;
+      }
+      .header {
+        width: 90%;
+      }
+      .header h1 {
+        text-align: center;
+      }
+      .header table {
+        width: 100%;
+      }
+      .header table tr {
+        display: flex;
+      }
+      .header table tr td {
+        flex: 1;
+        display: flex;
+        margin-bottom: 0.5em;
+      }
+      .header table tr td label::after {
+        content: ":";
+      }
+      .header table tr td input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid black;
+        margin-left: 1em;
+        margin-right: 1em;
+      }
+      .footer {
+        text-align: center;
+        border: 1px solid black;
+        height: 20%;
+        width: 90%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Go game record</h1>
+      <table>
+        <tr>
+          <td>
+            <label>Event</label>
+            <input type="text" />
+          </td>
+          <td>
+            <label>Date</label>
+            <input type="text" />
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label>Black</label>
+            <input type="text" />
+          </td>
+          <td>
+            <label>Handicap</label>
+            <input type="text" />
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label>White</label>
+            <input type="text" />
+          </td>
+          <td>
+            <label>Komi</label>
+            <input type="text" />
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label>Time limit</label>
+            <input type="text" />
+          </td>
+          <td>
+            <label>Result</label>
+            <input type="text" />
+          </td>
+        </tr>
+      </table>
+    </div>
+    <svg
+      id="board"
+      xmlns="http://www.w3.org/2000/svg"
+      preserveAspectRatio="xMidYMid meet"
+    ></svg>
+    <div class="footer"></div>
+
+    <script>
+      // Source: https://en.wikipedia.org/wiki/Go_equipment
+      const boardSize = 19; // Standard Go board size
+      const lineSpacingWidthWise = 22;
+      const lineSpacingLengthWise = 23.7;
+      const lineThickness = 1;
+      const starPointDiameter = 4;
+      const stoneDiameter = 22.5;
+
+      const sizeRatio = 1;
+      const margin = stoneDiameter * sizeRatio;
+
+      function boardPositionToCoordinates(row, column) {
+        x = column * (lineSpacingWidthWise + lineThickness) + lineThickness / 2;
+        y = row * (lineSpacingLengthWise + lineThickness) + lineThickness / 2;
+        return [x * sizeRatio + margin, y * sizeRatio + margin];
+      }
+
+      const board = document.getElementById("board");
+      viewWidth =
+        ((boardSize + 2) * lineThickness +
+          (boardSize + 1) * lineSpacingWidthWise) *
+          sizeRatio +
+        2 * margin;
+      viewLength =
+        ((boardSize + 2) * lineThickness +
+          (boardSize + 1) * lineSpacingLengthWise) *
+          sizeRatio +
+        2 * margin;
+      board.setAttribute("viewBox", `0 0 ${viewWidth} ${viewLength}`);
+
+      // Draw stones
+      for (let row = 1; row <= boardSize; row++) {
+        for (let column = 1; column <= boardSize; column++) {
+          strokeWidth = lineThickness * sizeRatio;
+          radius = ((stoneDiameter + lineThickness / 2) / 2) * sizeRatio;
+
+          [x, y] = boardPositionToCoordinates(row, column);
+          board.innerHTML += `<circle cx="${x}" cy="${y}" r="${radius}" style="fill: none; stroke: #ddd; stroke-width: ${strokeWidth};"/>`;
+        }
+      }
+
+      // Draw lines
+      for (let i = 1; i <= boardSize; i++) {
+        strokeWidth = lineThickness * sizeRatio;
+
+        // Horizontal lines
+        [startRow, startColumn] = [i, 1];
+        [endRow, endColumn] = [i, boardSize];
+        [x1, y1] = boardPositionToCoordinates(startRow, startColumn);
+        [x2, y2] = boardPositionToCoordinates(endRow, endColumn);
+        x1 -= strokeWidth / 2;
+        x2 += strokeWidth / 2;
+        board.innerHTML += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke: black; stroke-width: ${strokeWidth}"/>`;
+
+        // Vertical lines
+        [startRow, startColumn] = [1, i];
+        [endRow, endColumn] = [boardSize, i];
+        [x1, y1] = boardPositionToCoordinates(startRow, startColumn);
+        [x2, y2] = boardPositionToCoordinates(endRow, endColumn);
+        y1 -= strokeWidth / 2;
+        y2 += strokeWidth / 2;
+        board.innerHTML += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke: black; stroke-width: ${strokeWidth}"/>`;
+      }
+
+      // Draw star points
+      for (let row = 4; row <= boardSize; row += 6) {
+        for (let column = 4; column <= boardSize; column += 6) {
+          radius = (starPointDiameter / 2) * sizeRatio;
+
+          [x, y] = boardPositionToCoordinates(row, column);
+          board.innerHTML += `<circle cx="${x}" cy="${y}" r="${radius}" style="fill: black;"/>`;
+        }
+      }
+
+      // Draw coordinates
+      for (let row = 1; row <= boardSize; row++) {
+        symbol = `${boardSize - row + 1}`;
+
+        [x, y] = boardPositionToCoordinates(row, 0);
+        board.innerHTML += `<text x="${x}" y="${y}" style="fill: black; text-anchor: middle; dominant-baseline: middle; font-size: ${
+          stoneDiameter * sizeRatio * 0.5
+        }px;">${symbol}</text>`;
+
+        [x, y] = boardPositionToCoordinates(row, boardSize + 1);
+        board.innerHTML += `<text x="${x}" y="${y}" style="fill: black; text-anchor: middle; dominant-baseline: middle; font-size: ${
+          stoneDiameter * sizeRatio * 0.5
+        }px;">${symbol}</text>`;
+      }
+
+      horizontalCoordinates = "ABCDEFGHJKLMNOPQRST"; // no I
+      for (let column = 1; column <= boardSize; column++) {
+        symbol = `${horizontalCoordinates[column - 1]}`;
+
+        [x, y] = boardPositionToCoordinates(0, column);
+        board.innerHTML += `<text x="${x}" y="${y}" style="fill: black; text-anchor: middle; dominant-baseline: middle; font-size: ${
+          stoneDiameter * sizeRatio * 0.5
+        }px;">${symbol}</text>`;
+
+        [x, y] = boardPositionToCoordinates(boardSize + 1, column);
+        board.innerHTML += `<text x="${x}" y="${y}" style="fill: black; text-anchor: middle; dominant-baseline: middle; font-size: ${
+          stoneDiameter * sizeRatio * 0.5
+        }px;">${symbol}</text>`;
+      }
+    </script>
+  </body>
+</html>
