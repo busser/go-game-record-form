@@ -16,7 +16,7 @@ $(PDF_FILE): $(HTML_FILE)
 		--run-all-compositor-stages-before-draw \
 		--print-to-pdf=$(PDF_FILE) \
 		--no-pdf-header-footer \
-		file://$(HTML_FILE)
+		$(HTML_FILE)
 
 $(PNG_FILE): $(PDF_FILE)
 	magick -density 300 $(PDF_FILE) -alpha remove $(PNG_FILE)
